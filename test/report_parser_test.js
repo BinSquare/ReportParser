@@ -46,9 +46,15 @@ describe('Report Parser', function () {
 
 
 describe('Directory merge', function(){
-    it('nil inputs return error string', function(){
+    it('nil inputs returns empty string', function(){
         let parser = new ReportParser
-        let result = ReportParser.mergePath("","")
-        assert.equal( result, error_string)
+        let result = parser.mergePath("","")
+        assert.equal( result, "")
     });
+
+    it('valid inputs concats strings', function(){
+        let parser = new ReportParser
+        let result = parser.mergePath("test/", "sample.report")
+        assert.equal(result, "test/sample.report")
+    })
 })
