@@ -6,14 +6,10 @@ export default class ReportParser{
     }
 
     parseFile(filename){
-
-
         return error, contents
     }
 
-
     parse(config, callback){
-
         let error, data = fs.readFile(config.filename,'utf8', (err, contents) =>{ 
             if (err){
                 console.log(err)
