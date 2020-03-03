@@ -55,11 +55,11 @@ export default class ReportParser {
     }
 
     async parse(config, callback) {
-
         try {
             let filepath = this.mergePath(config.working_dir, config.filename)
             let value = await this.parseLine(filepath, config.target_field)
             this.removeFile(config.remove_after_parse, filepath)
+
             callback(null, value)
             return value
 

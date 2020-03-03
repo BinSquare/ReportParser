@@ -15,40 +15,42 @@ const default_parser_config = {
 };
 
 const parser_config_complete = {
-    'working_dir': '/var/tmp/working',
+    'working_dir': '/test/assets',
     'filename': 'qa.report',
     'target_field': 'report_status',
-    'remove_after_parse': true
+    'remove_after_parse': false
 }
 
 const parser_config_incomplete = {
-    'working_dir': '',
-    'filename': '',
+    'working_dir': '/var/tmp/working',
+    'filename': 'qa.report',
     'target_field': '',
-    'remove_after_parse': true
+    'remove_after_parse': false
 }
 
 const error_string = "Incomplete inputs, check your inputs!"
 
 describe('Report Parser', function () {
 
-    it('nil inputs return error string', function () {
+    it('incomplete inputs return non-string', function () {
         let report = new ReportParser
 
+        //Ensure file exists, synchronous only used for testing.
+        fs.writeFileSync('./var/tmp/working/qa.report', "hello world")
         let result = report.parse(parser_config_incomplete, (err, value) => {
             console.log(value)
         })
-        assert.equal(result, error_string)
+        assert.isNotString(result, error_string)
     });
 
-    it('valid inputs return with non-nil target field value', function () {
+    it('valid inputs return with non-nil target field value', async () => {
         let report = new ReportParser
 
-        let result = report.parse(parser_config_complete, (err, value) => {
+        let result = await report.parse(parser_config_complete, (err, value) => {
             console.log(value)
         })
 
-        assert.isNotNaN(result, "OK")
+        assert.equal(result, 'OK')
     })
 });
 
