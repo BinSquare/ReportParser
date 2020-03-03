@@ -31,12 +31,6 @@ describe('Report Parser', function () {
         assert.equal(result, error_string)
     });
 
-    it('optional remove_after_parse=false returns with file intact', function () {
-    });
-
-    it('optional remove_after_parse=true returns with file gone', function() {
-    })
-
     it('valid inputs return with non-nil target field value', function() {
         let report= new ReportParser
         
