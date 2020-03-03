@@ -1,12 +1,10 @@
 import fs from 'fs';
-import path from 'path';
 import {
     promisify
 } from 'util'
 import readline from 'readline'
 
 const readFile = promisify(fs.readFile)
-const deleteFile = promisify(fs.unlink)
 
 export default class ReportParser {
     mergePath(dir, filename) {
@@ -58,9 +56,16 @@ export default class ReportParser {
 
     async parse(config, callback) {
 
-        let filepath = this.mergePath(config.working_dir, config.filename)
-        let value = await this.parseLine(filepath, config.target_field)
-        return value
+        try {
+            let filepath = this.mergePath(config.working_dir, config.filename)
+            let value = await this.parseLine(filepath, config.target_field)
+            this.removeFile(config.remove_after_parse, filepath)
+            callback(null, value)
+            return value
+
+        } catch (err) {
+            callback(err, "")
+        }
 
     }
 }
