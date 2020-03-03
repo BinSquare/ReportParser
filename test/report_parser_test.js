@@ -62,7 +62,7 @@ describe('Directory merge', function(){
 })
 
 describe('Remove file after parse', function(){
-    it('remove_after_parse is true, return anything except false', async() =>{
+    it('remove_after_parse is true, return non-false ', async() =>{
         let parser = new ReportParser
         
         //ensure file exists
@@ -78,5 +78,14 @@ describe('Remove file after parse', function(){
         let result = parser.removeFile(false, 'test.txt')
 
         assert.equal(result, false)
+    })
+})
+
+describe('Parse lines', function(){
+    it('parse line logs each line', async()=>{
+        let parser = new ReportParser
+
+        let value= await parser.parseLine("./test/assets/qa.report", "x")
+        assert.equal(value , "38525348573.230")
     })
 })

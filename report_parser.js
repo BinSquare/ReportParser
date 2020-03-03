@@ -1,5 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import {promisify} from 'util'
+import readline from 'readline'
+
+const readFile = promisify(fs.readFile)
+const deleteFile = promisify(fs.unlink)
 
 export default class ReportParser {
     mergePath(dir, filename) {
@@ -11,15 +16,28 @@ export default class ReportParser {
         return ""
     }
 
-    parseFile(filename) {
-        fs.readFile(filename, 'utf8', (err, contents) => {
-            if (err) {
-                return err
-            } else {
-                return contents.toString()
+    async parseFile(filename) {
+        try{
+            const text = await readFile(filename, 'utf8');
+            return text
+        } catch (err) {
+            throw(err)
+        }
+    };
+
+    async parseLine(filename, key){
+        const reader = readline.createInterface({
+            input: fs.createReadStream(filename),
+        })
+
+        for await (const line of reader){
+            if(line.includes(":") && line.includes(key)){
+                var trimmedLine = line.substring(line.indexOf(":")+2)
+                console.log(trimmedLine)
+                return trimmedLine
             }
 
-        })
+        }
     }
 
     removeFile(remove_after_parse, filepath) {
