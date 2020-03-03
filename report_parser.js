@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import {promisify} from 'util'
+import {
+    promisify
+} from 'util'
 import readline from 'readline'
 
 const readFile = promisify(fs.readFile)
@@ -18,22 +20,22 @@ export default class ReportParser {
 
     //TODO: deprecated in favor parseline()
     async parseFile(filename) {
-        try{
+        try {
             const text = await readFile(filename, 'utf8');
             return text
         } catch (err) {
-            throw(err)
+            throw (err)
         }
     };
 
-    async parseLine(filename, key){
+    async parseLine(filename, key) {
         const reader = readline.createInterface({
             input: fs.createReadStream(filename),
         })
 
-        for await (const line of reader){
-            if(line.includes(":") && line.includes(key)){
-                var trimmedLine = line.substring(line.indexOf(":")+2)
+        for await (const line of reader) {
+            if (line.includes(":") && line.includes(key)) {
+                var trimmedLine = line.substring(line.indexOf(":") + 2)
                 console.log(trimmedLine)
                 return trimmedLine
             }
@@ -54,8 +56,11 @@ export default class ReportParser {
         }
     }
 
-    parse(config, callback) {
+    async parse(config, callback) {
+
         let filepath = this.mergePath(config.working_dir, config.filename)
-        return this.parseFile(filepath)
+        let value = await this.parseLine(filepath, config.target_field)
+        return value
+
     }
 }
