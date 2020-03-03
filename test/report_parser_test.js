@@ -1,6 +1,8 @@
 // const ReportParser= require('../report_parser')
 import ReportParser from '../report_parser.js';
 import chai from 'chai';
+import fs from 'fs';
+import {promisify} from 'util'
 
 let assert = chai.assert
 
@@ -14,7 +16,7 @@ const parser_config = {
     'working_dir': '/var/tmp/working',
     'filename': 'qa.report',
     'target_field': 'report_status',
-    'remove_after_parse':'true'
+    'remove_after_parse':true
 
 }
 
@@ -54,7 +56,27 @@ describe('Directory merge', function(){
 
     it('valid inputs concats strings', function(){
         let parser = new ReportParser
-        let result = parser.mergePath("test/", "sample.report")
-        assert.equal(result, "test/sample.report")
+        let result = parser.mergePath("/test", "sample.report")
+        assert.equal(result, "./test/sample.report")
+    })
+})
+
+describe('Remove file after parse', function(){
+    it('remove_after_parse is true, return anything except false', async() =>{
+        let parser = new ReportParser
+        
+        //ensure file exists
+        fs.writeFileSync('./test.txt', "hello world")
+
+        let result = await parser.removeFile(true, './test.txt')
+
+        assert.notEqual(result, false)
+    })
+
+    it('remove after_parse is false, return false', function(){
+        let parser = new ReportParser
+        let result = parser.removeFile(false, 'test.txt')
+
+        assert.equal(result, false)
     })
 })
