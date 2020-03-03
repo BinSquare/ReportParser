@@ -16,6 +16,7 @@ export default class ReportParser {
         return ""
     }
 
+    //TODO: deprecated in favor parseline()
     async parseFile(filename) {
         try{
             const text = await readFile(filename, 'utf8');
