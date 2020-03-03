@@ -1,29 +1,42 @@
-import * as fs from 'fs';
+import fs from 'fs';
+import path from 'path';
 
 export default class ReportParser {
     mergePath(dir, filename) {
-        return dir.concat(filename)
+        dir = '.' + dir
+        let mergedDir = dir.concat('/', filename)
+        if (mergedDir.endsWith('/') == false) {
+            return mergedDir
+        }
+        return ""
     }
 
     parseFile(filename) {
-        fs.readFile(filename, 'utf8', (err, contents)=>{
+        fs.readFile(filename, 'utf8', (err, contents) => {
             if (err) {
-                console.log(err)
+                return err
             } else {
-                console.log(contents)
+                return contents.toString()
             }
 
         })
-        return error, contents
+    }
+
+    removeFile(remove_after_parse, filepath) {
+        if (true == remove_after_parse) {
+            return fs.unlink(filepath, (err) => {
+                if (err) {
+                    console.log(err)
+                }
+                console.log("success")
+            })
+        } else {
+            return false
+        }
     }
 
     parse(config, callback) {
-
-        this.parseFile(config.filename)
-
-        console.log(error)
-        console.log(data)
-        return "nothing"
+        let filepath = this.mergePath(config.working_dir, config.filename)
+        return this.parseFile(filepath)
     }
-
 }
